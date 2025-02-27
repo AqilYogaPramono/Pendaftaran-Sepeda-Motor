@@ -19,9 +19,10 @@ const storage = multer.diskStorage({
 const uploud = multer({storage: storage})
 
 const fileFilter = (req, file, cb) => {
-    if (!file.minitype.startWith('images/')) {
-        return cb(new Error('only images file are allowed'))
+    if (!file.mimetype.startsWith('image/')) {
+        return cb(new Error('Only image files are allowed'))
     }
+    cb(null, true)
 }
 
 const limits = { fileSize: 1 * 1024 * 1024}
@@ -46,7 +47,7 @@ router.get('/:id', async (req, res, next) => {
     }
 })
 
-router.post('/store', uploud.single("gambar_kendaraan"), async (req, res, next) => {
+router.post('/store', update.single("gambar_kendaraan"), async (req, res, next) => {
     let {no_pol, nama_kendaraan, id_transmisi} = req.body
     let data = {no_pol, nama_kendaraan, id_transmisi, gambar_kendaraan: req.file.filename}
     let gambar = req?.file?.filename || null
@@ -65,7 +66,7 @@ router.post('/store', uploud.single("gambar_kendaraan"), async (req, res, next) 
     }
 })
 
-router.patch('/update/:id', uploud.single("gambar_kendaraan"), async (req, res, next) => {
+router.patch('/update/:id', update.single("gambar_kendaraan"), async (req, res, next) => {
     let id = req.params.id
     let {no_pol, nama_kendaraan, id_transmisi} = req.body
     let gambar = req?.file?.filename|| null
